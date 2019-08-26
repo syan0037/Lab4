@@ -1,0 +1,40 @@
+<html>
+    <head>
+            <link rel="stylesheet" href="styles.css"/>
+        <style>
+            table,th,td{
+                border: 1px solid black;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>
+             <a href="http://localhost:8080">Home</a>
+             <a href="http://localhost:8080/newtask">Add new Task</a>
+         </h1>
+
+         <h3>
+             <table>
+                 <tr>
+                     <td>Name</td>
+                     <td>Due Date</td>
+                     <td>Description</td>
+                 </tr>
+                 <% for (var i =0; i<tasks.length; i++){ %>
+                    <tr>
+                        <td>
+                            <%= tasks[i].taskname %>
+                        </td>
+                        <td>
+                             <%= tasks[i].taskdue %>
+                        </td>
+                        <td>
+                             <%= tasks[i].taskdesc %>
+                        </td>
+                    </tr>
+                    <% }%>
+         </h3>
+
+    </body>
+</html>
