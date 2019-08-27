@@ -21,13 +21,13 @@ app.use(express.static('css'));
 let dataBase = [];
 
 app.get('/', function(req,res){
-    res.sendFile(__dirname +'index.html');
+    res.sendFile(__dirname +'/views/index.html');
 });
 
 
 //new task
 app.get('/newtask', function(req,res){
-    res.sendFile(__dirname + 'newtask.html');
+    res.sendFile(__dirname + '/views/newtask.html');
 });
 
 //list task
@@ -42,7 +42,7 @@ app.post('/data', function(req,res){
         taskdesc: req.body.taskdesc,
     };
     dataBase.push(data);
-    res.sendFile(__dirname +'newtask.html');
+    res.sendFile(__dirname +'/views/newtask.html');
 });
 
 
