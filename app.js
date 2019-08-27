@@ -1,6 +1,5 @@
  let express = require('express');
- let router = express.Router();
- let bodyParser = require('body-parser');
+ let bodyParser = require('body-parser'); //import 
  let app = express();
 
  app.use(bodyParser.urlencoded({
@@ -9,6 +8,7 @@
 
 app.use(bodyParser.json())
 
+// res.render ()
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
@@ -21,18 +21,18 @@ app.use(express.static('css'));
 let dataBase = [];
 
 app.get('/', function(req,res){
-    res.render('index.html');
+    res.sendFile(__dirname +'index.html');
 });
 
 
 //new task
 app.get('/newtask', function(req,res){
-    res.render('newtask.html');
+    res.sendFile(__dirname + 'newtask.html');
 });
 
 //list task
 app.get('/listtasks', function(req,res){
-    res.render('listtasks.html', {tasks: dataBase});
+    res.render('listtasks.html', {tasks: dataBase});  // two parameters: first is html, second a object of dataBase
 });
 
 app.post('/data', function(req,res){
@@ -42,7 +42,7 @@ app.post('/data', function(req,res){
         taskdesc: req.body.taskdesc,
     };
     dataBase.push(data);
-    res.render('newtask.html');
+    res.sendFile(__dirname +'newtask.html');
 });
 
 
