@@ -15,7 +15,7 @@ app.set('view engine', 'html');
 app.use(express.static('img'));
 app.set(express.static('view'));
 app.use(express.static('css'));
-
+//sss
 
 //home page
 let dataBase = [];
