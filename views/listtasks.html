@@ -10,8 +10,9 @@
 
     <body>
         <h1>
-             <a href="/">Home</a>
-             <a href="/newtask">Add new Task</a>
+             <a href="http:localhost:8080/">Home</a>
+             <a href="http:localhost:8080/newtask">Add new Task</a>
+             <a href="http:localhost:8080/updatetask">Update Task</a>
          </h1>
 
          <h3>
@@ -21,19 +22,29 @@
                      <td>Due Date</td>
                      <td>Description</td>
                  </tr>
-                 <% for (var i =0; i<tasks.length; i++){ %>
+                 <% for (var i =0; i<task.length; i++){ %>
                     <tr>
                         <td>
-                            <%= tasks[i].taskname %>
+                            <%= tasks[i].taskID %>
                         </td>
                         <td>
-                             <%= tasks[i].taskdue %>
+                            <%= tasks[i].taskName %>
                         </td>
                         <td>
-                             <%= tasks[i].taskdesc %>
+                            <%= tasks[i].assignTo %>
                         </td>
+                        <td>
+                            <%= tasks[i].taskDue %>
+                       </td>
+                       <td>
+                            <%= tasks[i].taskStatus %>
+                       </td>
+                       <td>
+                            <%= tasks[i].taskDesc %>
+                       </td>
                     </tr>
                     <% }%>
+                </table>
          </h3>
 
     </body>

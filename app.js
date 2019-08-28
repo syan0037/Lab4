@@ -1,6 +1,8 @@
  let express = require('express');
  let bodyParser = require('body-parser'); //import 
  let app = express();
+ let mongodb = require("mongodb");
+ let morgan = require("morgan");
 
  app.use(bodyParser.urlencoded({
     extended: false
@@ -15,35 +17,68 @@ app.set('view engine', 'html');
 app.use(express.static('img'));
 app.set(express.static('view'));
 app.use(express.static('css'));
-//sss
+app.use(morgan('common'));
+app.listen("8080");
+
+
+//configure MongoDB
+const MongoClient = mongodb.MongoClient;
+
+//connection URL
+const url = "mongodb://localhost:27017";
+
+//rederence to the dataBase
+let db;
+
+//connect to mongoDB server
+MongoClient.connect(url,{useNewUrlParser:true},
+    function (err, client){
+        if (err) {
+            console.log("Err  ", err);
+        } else {
+            console.log("Connected successfully to server");
+            db = client.db("fit2095db");
+        }
+    })
+
+
 
 //home page
-let dataBase = [];
-
 app.get('/', function(req,res){
     res.sendFile(__dirname +'/views/index.html');
 });
 
 
-//new task
+//new task // insert new task
 app.get('/newtask', function(req,res){
     res.sendFile(__dirname + '/views/newtask.html');
 });
 
-//list task
-app.get('/listtasks', function(req,res){
-    res.render('listtasks.html', {tasks: dataBase});  // two parameters: first is html, second a object of dataBase
-});
 
 app.post('/data', function(req,res){
-    let data = {
-        taskname: req.body.taskname,
-        taskdue: req.body.taskdue,
-        taskdesc: req.body.taskdesc,
-    };
-    dataBase.push(data);
-    res.sendFile(__dirname +'/views/newtask.html');
+    // let data = {
+    //     taskname: req.body.taskname,
+    //     taskdue: req.body.taskdue,
+    //     taskdesc: req.body.taskdesc,
+    // };
+    // db.push(data);
+    // res.sendFile(__dirname +'/views/newtask.html');
+    let taskDetails = req.body;
+
+    db.collection('tasks').insertOne({taskID: taskDetails.taskID, taskName: taskDetails.taskName, assignTo: taskDetails.assignTo, dueDate: taskDetails.dueDate, taskStatus: taskDetails.taskStatus, taskDesc: taskDetails.taskDesc});
+    res.redirect('/listtasks');
+});
+
+//list task
+app.get('/listtasks', function(req,res){
+    db.collection('tasks').find({}).toArray(function(err,data){
+       res.render('listtasks.html', {tasks: data});  // two parameters: first is html, second a object of dataBase
+    });
 });
 
 
-app.listen("8080");
+//update task
+app.get('/updatetask', function(req,res){
+    res.sendFile(__dirname + '/views/updatetask.html');
+});
+
