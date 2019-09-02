@@ -18,6 +18,7 @@ app.use(express.static('img'));
 app.set(express.static('view'));
 app.use(express.static('css'));
 app.use(morgan('common'));
+
 app.listen("8080");
 
 
