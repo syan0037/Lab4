@@ -22,10 +22,10 @@ app.listen("8080");
 
 
 //configure MongoDB
-const MongoClient = mongodb.MongoClient;
+let MongoClient = mongodb.MongoClient;
 
 //connection URL
-const url = "mongodb://localhost:27017";
+let url = "mongodb://localhost:27017/";
 
 //rederence to the dataBase
 let db;
@@ -49,30 +49,31 @@ app.get('/', function(req,res){
 });
 
 
-//new task // insert new task
+//new task 
+//insert new task
 app.get('/newtask', function(req,res){
     res.sendFile(__dirname + '/views/newtask.html');
 });
 
 
 app.post('/data', function(req,res){
-    // let data = {
-    //     taskname: req.body.taskname,
-    //     taskdue: req.body.taskdue,
-    //     taskdesc: req.body.taskdesc,
-    // };
-    // db.push(data);
-    // res.sendFile(__dirname +'/views/newtask.html');
     let taskDetails = req.body;
+    taskDetails.taskID = getNewId();
 
-    db.collection('tasks').insertOne({taskID: taskDetails.taskID, taskName: taskDetails.taskName, assignTo: taskDetails.assignTo, dueDate: taskDetails.dueDate, taskStatus: taskDetails.taskStatus, taskDesc: taskDetails.taskDesc});
+    db.collection('tasks').insertOne({taskID: taskDetails.taskID, taskName: taskDetails.taskName, assignTo: taskDetails.assignTo, taskDue: taskDetails.taskDue, taskStatus: taskDetails.taskStatus, taskDesc: taskDetails.taskDesc});
     res.redirect('/listtasks');
 });
+
+function getNewId (){
+    return (Math.floor(100000 + Math.random() * 900000));
+}
+
+
 
 //list task
 app.get('/listtasks', function(req,res){
     db.collection('tasks').find({}).toArray(function(err,data){
-       res.render('listtasks.html', {tasks: data});  // two parameters: first is html, second a object of dataBase
+       res.render('listtasks', {taskDB: data});  // two parameters: first is html, second a object of dataBase
     });
 });
 
@@ -82,3 +83,35 @@ app.get('/updatetask', function(req,res){
     res.sendFile(__dirname + '/views/updatetask.html');
 });
 
+app.post('/updatetaskdata', function (req, res){
+    let taskDetails = req.body;
+    db.collection('tasks').updateOne({taskID:parseInt(taskDetails.taskID)}, {$set: {taskStatus: req.body.taskStatus}},
+    function (err, result){
+        res.redirect('/listtasks');
+    });
+});
+
+
+//delete task 
+app.get('/deletetask', function(req, res){
+    res.sendFile(__dirname + '/views/deletetask.html');
+});
+
+app.post('/deletetaskdata', function(req, res){
+    let taskDetails = req.body;
+    db.collection ("tasks").deleteOne({taskID: parseInt(taskDetails.taskID)}, function (err, result){
+    res.redirect('/listtasks');
+    });
+});
+
+
+//delete all the completed tasks
+app.get('/deletecompletedtasks', function(req, res){
+    res.sendFile(__dirname + '/views/deletecompletedtasks.html')
+});
+
+app.post('/deletetaskdataCompleted', function(req, res){
+    let taskDetails = req.body;
+    db.collection ("tasks").deleteMany({taskStatus: 'Complete'});
+    res.redirect('/listtasks');
+});

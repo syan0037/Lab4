@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="styles.css"/>
+    </head>  
+
+    <body>
+        <h1>Delete Completed Tasks</h1>
+    </body>
+    <h3>
+        <a href="http://localhost:8080">Home</a>
+        <a href="http://localhost:8080/newtask">Add new Task</a>
+        <a href="http://localhost:8080/listtasks">List All Tasks</a>
+        <a href="http://localhost:8080/updatetask">Update Task</a>
+        <a href="http://localhost:8080/deletetask">Delete Task</a>
+    </h3>
+
+    <form action="/deletetaskdataCompleted" method="POST">
+        Delete Task Status
+        <select type = "text" name="taskStatus" multiple>
+                <option value ="In Progress">In Progress</option>
+                <option value ="Complete">Complete</option>
+        </select>
+        <input type="submit" value="Submit" /> </br>
+    </form>
+</html>

@@ -4,13 +4,15 @@
             </head>
     <body>
         <h1>
-            <a href="http:localhost:8080/">Home</a>
-            <a href="http:localhost:8080/listtasks">List Tasks</a>
-            <a href="http:localhost:8080/updatetask">Update Task</a>
+            <a href="http://localhost:8080/">Home</a>
+            <a href="http://localhost:8080/listtasks">List Tasks</a>
+            <a href="http://localhost:8080/updatetask">Update Task</a>
+            <a href="http://localhost:8080/deletetask">Delete Task</a>
+            <a href="http://localhost:8080/deletecompletedtasks">Delete Completed Tasks</a>
         </h1>
         <form action="/data" method="POST">
-            Task ID:
-            <input type="text" name="taskID"/></br>
+            <!-- Task ID:
+            <input type="text" name="taskID"/></br> -->
             Task Name:
             <input type="text" name="taskName"/></br>
             Assign to:
@@ -18,7 +20,10 @@
             Task Due:
             <input type="text" name="taskDue"/></br>
             Task status:
-            <input type="text" name="taskStatus"/></br>
+            <select type="text" name="taskStatus" multiple>
+                <option value ="In Progress">In Progress</option>
+                <option value ="Complete">Complete</option>
+            </select>
             Task Desc:
             <input type="text" name="taskDesc"/></br>
             <button>Submit</button>

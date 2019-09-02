@@ -10,37 +10,43 @@
 
     <body>
         <h1>
-             <a href="http:localhost:8080/">Home</a>
-             <a href="http:localhost:8080/newtask">Add new Task</a>
-             <a href="http:localhost:8080/updatetask">Update Task</a>
+             <a href="http://localhost:8080/">Home</a>
+             <a href="http://localhost:8080/newtask">Add new Task</a>
+             <a href="http://localhost:8080/updatetask">Update Task</a>
+             <a href="http://localhost:8080/deletetask">Delete Task</a>
+             <a href="http://localhost:8080/deletecompletedtasks">Add new Task</a>
+             <a href="http://localhost:8080/deletecompletedtasks">Delete Completed Tasks</a>]
          </h1>
 
          <h3>
              <table>
                  <tr>
-                     <td>Name</td>
-                     <td>Due Date</td>
-                     <td>Description</td>
+                     <td>taskID</td>
+                     <td>taskName</td>
+                     <td>assignTo</td>
+                     <td>dueDate</td>
+                     <td>taskStatus</td>
+                     <td>taskDesc</td>
                  </tr>
-                 <% for (var i =0; i<task.length; i++){ %>
+                 <% for (var i =0; i<taskDB.length; i++){ %>
                     <tr>
                         <td>
-                            <%= tasks[i].taskID %>
+                            <%= taskDB[i].taskID %>
                         </td>
                         <td>
-                            <%= tasks[i].taskName %>
+                            <%= taskDB[i].taskName %>
                         </td>
                         <td>
-                            <%= tasks[i].assignTo %>
+                            <%= taskDB[i].assignTo %>
                         </td>
                         <td>
-                            <%= tasks[i].taskDue %>
+                            <%= taskDB[i].taskDue %>
                        </td>
                        <td>
-                            <%= tasks[i].taskStatus %>
+                            <%= taskDB[i].taskStatus %>
                        </td>
                        <td>
-                            <%= tasks[i].taskDesc %>
+                            <%= taskDB[i].taskDesc %>
                        </td>
                     </tr>
                     <% }%>
