@@ -1,7 +1,7 @@
  let express = require('express');
  let bodyParser = require('body-parser'); //import 
  let app = express();
- let mongodb = require("mongodb");
+ let mongodb = require("mongodb"); //get an instance of MongoDB
  let morgan = require("morgan");
 
  app.use(bodyParser.urlencoded({
@@ -20,15 +20,15 @@ app.use(express.static('css'));
 app.use(morgan('common'));
 
 app.listen("8080");
-//
 
 //configure MongoDB
 let MongoClient = mongodb.MongoClient;
 
-//connection URL
+
+//connect URL to the MongoDB server
 let url = "mongodb://localhost:27017/";
 
-//rederence to the dataBase
+//reference to the dataBase
 let db;
 
 //connect to mongoDB server
@@ -74,7 +74,7 @@ function getNewId (){
 //list task
 app.get('/listtasks', function(req,res){
     db.collection('tasks').find({}).toArray(function(err,data){
-       res.render('listtasks', {taskDB: data});  // two parameters: first is html, second a object of dataBase
+       res.render('listtasks', {taskDB: data});  
     });
 });
 
