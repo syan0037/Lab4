@@ -128,6 +128,6 @@ app.post('/deleteOldcompletetasks', function(req, res){
     let Date = '3/9/2019';
     let query = {taskDue: {$gte: Date}};
     // db.collection ("task").find(query).deleteMany({taskStatus: 'Complete'});
-    db.collection("task").deleteMany({taskDue: {$gte: Date}}, {taskStatus: 'Complete'});
+    db.collection("task").deleteMany({taskDue: {$gte: Date}} && {taskStatus: 'Complete'});
     res.redirect('/listtasks');
 });
