@@ -123,7 +123,7 @@ app.get('/deleteOldcomplete', function(req, res){
     res.sendFile(__dirname + '/views/deleteOldcomplete.html')
 });
 
-app.get('/deleteOldcompletetasks', function(req, res){
+app.post('/deleteOldcompletetasks', function(req, res){
     let taskDetails = req.body;
     let Date = '3/9/2019';
     let query = {taskDue: {$gte: Date}};
