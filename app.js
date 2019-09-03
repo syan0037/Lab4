@@ -116,3 +116,14 @@ app.post('/deletetaskdataCompleted', function(req, res){
     db.collection ("tasks").deleteMany({taskStatus: 'Complete'});
     res.redirect('/listtasks');
 });
+
+
+//delete all old complete tasks
+app.get('/deleteOldcomplete', function(req, res){
+    res.sendFile(__dirname + '/views/deleteOldcomplete.html')
+});
+
+app.get('/deleteOldComplete', function(req, res){
+    let taskDetails = req.body;
+    db.collection("task").deleteMany({taskStatus: 'Complete'},)
+});
