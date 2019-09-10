@@ -3,6 +3,13 @@
  let app = express();
  let mongodb = require("mongodb"); //get an instance of MongoDB
  let morgan = require("morgan");
+//  var mongoose = require('mongoose');
+ let mongoose = require('mongoose');
+
+//rederencing schemas
+ let Tasks = require('./models/tasks');
+ let Developers = require('./models/developers');
+
 
  app.use(bodyParser.urlencoded({
     extended: false
@@ -22,25 +29,24 @@ app.use(morgan('common'));
 app.listen("8080");
 
 //configure MongoDB
-let MongoClient = mongodb.MongoClient;
+// let MongoClient = mongodb.MongoClient;
 
 
 //connect URL to the MongoDB server
-let url = "mongodb://localhost:27017/";
+let url = "mongodb://localhost:27017/fit2095db";
 
 //reference to the dataBase
-let db;
+let db = mongoose.connections;
 
-//connect to mongoDB server
-MongoClient.connect(url,{useNewUrlParser:true},
-    function (err, client){
-        if (err) {
-            console.log("Err  ", err);
-        } else {
-            console.log("Connected successfully to server");
-            db = client.db("fit2095db");
-        }
-    })
+// //connect to mongoDB server
+mongoose.connect('mongodb://localhost:27017/fit2095db', function(err){
+    if(err){
+        console.log('Error in Mongoose connection');
+        throw err;
+    }
+    console.log('Successfully connected');
+});
+
 
 
 
@@ -49,9 +55,17 @@ app.get('/', function(req,res){
     res.sendFile(__dirname +'/views/index.html');
 });
 
+app.get('/getAssignTo', function(err,res){
+    Developers.find().populate('developerSchema').exec((err, result) => {
+        if (err){
+            console.log(err)
+        }
+        res.send(result);
+    });
+})
 
-//new task 
-//insert new task
+
+//***insert new task
 app.get('/newtask', function(req,res){
     res.sendFile(__dirname + '/views/newtask.html');
 });
@@ -61,7 +75,31 @@ app.post('/data', function(req,res){
     let taskDetails = req.body;
     taskDetails.taskID = getNewId();
 
-    db.collection('tasks').insertOne({taskID: taskDetails.taskID, taskName: taskDetails.taskName, assignTo: taskDetails.assignTo, taskDue: taskDetails.taskDue, taskStatus: taskDetails.taskStatus, taskDesc: taskDetails.taskDesc});
+    // let task = new Tasks({
+    //     taskID: taskDetails.taskID,
+    //     taskName: taskDetails.taskName,
+    //     // assignTo: taskDetails._id,
+    //     // assignTo: developer._id,
+    //     taskDue: taskDetails.taskDue,
+    //     taskStatus: taskDetails.taskStatus,
+    //     taskDesc: taskDetails.taskDesc,
+    // });
+    
+
+    let task = new Tasks({
+        taskID: taskDetails.taskID,
+        taskName: taskDetails.taskName,
+        assignTo: taskDetails.assignTo,
+        taskDue: taskDetails.taskDue,
+        taskStatus: taskDetails.taskStatus,
+        taskDesc: taskDetails.taskDesc,
+    });
+
+    task.save(function(err){
+        if (err) throw err;
+        console.log('task successfully add to DB');
+    });
+    
     res.redirect('/listtasks');
 });
 
@@ -70,62 +108,103 @@ function getNewId (){
 }
 
 
-
-//list task
-app.get('/listtasks', function(req,res){
-    db.collection('tasks').find({}).toArray(function(err,data){
+//***list task 
+app.get('/listtasks', function(req, res){
+    Tasks.find({}, function(err, data){
        res.render('listtasks', {taskDB: data});  
     });
 });
 
 
-//update task
+//***update task
 app.get('/updatetask', function(req,res){
     res.sendFile(__dirname + '/views/updatetask.html');
 });
 
 app.post('/updatetaskdata', function (req, res){
     let taskDetails = req.body;
-    db.collection('tasks').updateOne({taskID:parseInt(taskDetails.taskID)}, {$set: {taskStatus: req.body.taskStatus}},
-    function (err, result){
+    Tasks.updateOne({taskID:parseInt(taskDetails.taskID)}, {$set: {taskStatus: req.body.taskStatus}},
+    function (err, doc){
+        console.log(doc);
         res.redirect('/listtasks');
     });
 });
 
 
-//delete task 
+//***delete task 
 app.get('/deletetask', function(req, res){
     res.sendFile(__dirname + '/views/deletetask.html');
 });
 
 app.post('/deletetaskdata', function(req, res){
     let taskDetails = req.body;
-    db.collection ("tasks").deleteOne({taskID: parseInt(taskDetails.taskID)}, function (err, result){
-    res.redirect('/listtasks');
+    Tasks.deleteOne({taskID: parseInt(taskDetails.taskID)}, function (err, doc){
+        console.log(doc);
+        res.redirect('/listtasks');
     });
 });
 
 
-//delete all the completed tasks
+//***delete all the completed tasks
 app.get('/deletecompletedtasks', function(req, res){
     res.sendFile(__dirname + '/views/deletecompletedtasks.html')
 });
 
 app.post('/deletetaskdataCompleted', function(req, res){
-    let taskDetails = req.body;
-    db.collection ("tasks").deleteMany({taskStatus: 'Complete'});
-    res.redirect('/listtasks');
+    // let taskDetails = req.body;
+    Tasks.deleteMany({taskStatus: 'Complete'}, function(err){
+        res.redirect('/listtasks')
+    });
 });
 
 
-//delete all old complete tasks
-app.get('/deleteOldcomplete', function(req, res){
-    res.sendFile(__dirname + '/views/deleteOldcomplete.html')
+
+
+
+//***insert new Developer 
+app.get('/newdeveloper', function(req,res){
+    res.sendFile(__dirname + '/views/newdeveloper.html');
 });
 
-app.post('/deleteOldcompletetasks', function(req, res){
-    let taskDetails = req.body;
-    let dueDate = '2019-09-03';
-    db.collection("tasks").deleteMany({taskDue: {$lt: dueDate}} && {taskStatus: 'Complete'});
-    res.redirect('/listtasks');
+app.post('/newDeveloper', function(req,res){
+    let developersDetails = req.body;
+    // Developers.inserOne({_id: developersDetails._id, firstName: developersDetails.firstName, lastName: developersDetails.lastName, level: developersDetails.level, state: developersDetails.state, suburb: developersDetails.suburb, street: developersDetails.street, unit: developersDetails.unit});
+    // res.redirect('/listdevelopers');
+    let developer = new Developers({
+        _id: mongoose.Types.ObjectId(),
+
+        name: {
+            firstName: developersDetails.firstName,
+            lastName: developersDetails.lastName,
+        },
+
+        level: developersDetails.level,
+       
+
+        address:{
+            state: developersDetails.state,
+            suburb: developersDetails.suburb,
+            street: developersDetails.street,
+            unit: developersDetails.unit,
+        },
+    });
+
+    developer.save(function(err){
+        if (err) throw err;
+
+        console.log('developer successfully add to DB');
+
+    })
+    res.redirect('/listdevelopers');
+});
+
+
+//list Developers
+app.get('/listdevelopers', function(req, res){
+    // Developers.find({}).toArray(function(err,date){
+    //     res.render('/listdevelopers',{taskDB: date});
+    // })
+    Developers.find({}, function(err, data){
+        res.render('listdevelopers', {developerDB: data});
+    });
 });

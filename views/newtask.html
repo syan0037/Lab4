@@ -4,26 +4,21 @@
             </head>
     <body>
         <h1>
-            <!-- <a href="http://localhost:8080/">Home</a>
-            <a href="http://localhost:8080/listtasks">List Tasks</a>
-            <a href="http://localhost:8080/updatetask">Update Task</a>
-            <a href="http://localhost:8080/deletetask">Delete Task</a>
-            <a href="http://localhost:8080/deletecompletedtasks">Delete Completed Tasks</a> -->
-
             <a href="/">Home</a>
-            <a href="/listtasks">List Tasks</a>
+            <a href="/listtasks">List All Tasks</a>
             <a href="/updatetask">Update Task</a>
             <a href="/deletetask">Delete Task</a>
             <a href="/deletecompletedtasks">Delete Completed Tasks</a>
-
+            <a href="/listdevelopers">List Developers</a>
+            <a href="/newdeveloper">New Developer</a>
         </h1>
         <form action="/data" method="POST">
             <!-- Task ID:
             <input type="text" name="taskID"/></br> -->
             Task Name:
             <input type="text" name="taskName"/></br>
-            Assign to:
-            <input type="text" name="assignTo"/></br>           
+            Assign To 
+            <input type="text" name="assignTo"/></br>
             Task Due:
             <input type="date" name="taskDue"/></br>
             Task status:
