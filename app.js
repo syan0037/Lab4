@@ -155,9 +155,16 @@ app.post('/deletetaskdataCompleted', function(req, res){
     Tasks.deleteMany({taskStatus: 'Complete'}, function(err){
         res.redirect('/listtasks')
     });
+    
 });
 
 
+app.get('/:oldfirstname/:newfirstname', function(req,res){
+    Developers.updateMany({'name.firstName': req.params.oldfirstname}, {$set:{'name.firstName': req.params.newfirstname}}, function (err, doc){
+        console.log(doc);
+        res.send(doc);
+    })
+})
 
 
 
