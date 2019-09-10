@@ -208,3 +208,5 @@ app.get('/listdevelopers', function(req, res){
         res.render('listdevelopers', {developerDB: data});
     });
 });
+
+console.log(test);
