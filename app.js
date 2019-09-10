@@ -209,4 +209,4 @@ app.get('/listdevelopers', function(req, res){
     });
 });
 
-console.log(test);
+//console.log(test);
